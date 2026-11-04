@@ -5,7 +5,9 @@ FROM ${BUILD_FROM}
 WORKDIR /usr/src
 ARG \
     WYOMING_WHISPER_VERSION=3.5.0 \
-    WYOMING_VERSION=1.9.0 \
+    WYOMING_VERSION=1.9.0
+# Must match the exact pins of wyoming-faster-whisper
+ARG \
     TRANSFORMERS_VERSION=4.52.4 \
     ONNX_ASR_VERSION=0.11.0 \
     FUNASR_VERSION=1.4.3 \
