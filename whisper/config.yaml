@@ -1,9 +1,9 @@
 ---
-version: 3.5.3
+version: dev
 slug: whisper
 name: Whisper
 description: Speech-to-text with Whisper
-url: https://github.com/home-assistant/addons/blob/master/whisper
+url: https://github.com/home-assistant/app-whisper
 arch:
   - amd64
   - aarch64
@@ -46,4 +46,4 @@ schema:
 ports:
   "10300/tcp": null
 homeassistant: 2023.8.0.dev20230728
-image: homeassistant/{arch}-addon-whisper
+image: ghcr.io/home-assistant/app-whisper

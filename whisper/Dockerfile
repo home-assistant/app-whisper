@@ -1,19 +1,19 @@
-ARG BUILD_FROM
+ARG BUILD_FROM=ghcr.io/home-assistant/base-debian:trixie
 FROM ${BUILD_FROM}
 
 # Install Whisper
 WORKDIR /usr/src
 ARG \
-    WYOMING_WHISPER_VERSION \
-    WYOMING_VERSION \
-    TRANSFORMERS_VERSION \
-    ONNX_ASR_VERSION \
-    FUNASR_VERSION \
-    ONNXRUNTIME_VERSION \
-    FASTER_WHISPER_VERSION \
-    CTRANSLATE2_VERSION \
-    SHERPA_ONNX_VERSION \
-    TORCH_VERSION
+    WYOMING_WHISPER_VERSION=3.5.0 \
+    WYOMING_VERSION=1.9.0 \
+    TRANSFORMERS_VERSION=4.52.4 \
+    ONNX_ASR_VERSION=0.11.0 \
+    FUNASR_VERSION=1.4.3 \
+    ONNXRUNTIME_VERSION=1.29.0 \
+    FASTER_WHISPER_VERSION=1.2.1 \
+    CTRANSLATE2_VERSION=4.8.1 \
+    SHERPA_ONNX_VERSION=1.13.6 \
+    TORCH_VERSION=2.7.1
 
 RUN \
     apt-get update \
@@ -62,3 +62,9 @@ HEALTHCHECK --start-period=10m --start-interval=5s --interval=30s \
         | nc -w 1 localhost 10300 \
         | grep -q "faster-whisper" \
         || exit 1
+
+LABEL \
+    org.opencontainers.image.title="Home Assistant App: Whisper" \
+    org.opencontainers.image.description="Speech-to-text with Whisper" \
+    org.opencontainers.image.source="https://github.com/home-assistant/app-whisper" \
+    org.opencontainers.image.licenses="Apache License 2.0"
