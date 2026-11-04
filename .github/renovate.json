@@ -1,0 +1,115 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "enabledManagers": ["dockerfile", "github-actions", "custom.regex"],
+  "semanticCommits": "disabled",
+  "labels": ["dependencies"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "rhasspy/wyoming-faster-whisper in the Dockerfile",
+      "managerFilePatterns": ["/^whisper/Dockerfile$/"],
+      "matchStrings": [
+        "\\bWYOMING_WHISPER_VERSION=(?<currentValue>[^\\s\\\\]+)"
+      ],
+      "depNameTemplate": "rhasspy/wyoming-faster-whisper",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.+)$"
+    },
+    {
+      "customType": "regex",
+      "description": "wyoming in the Dockerfile",
+      "managerFilePatterns": ["/^whisper/Dockerfile$/"],
+      "matchStrings": ["\\bWYOMING_VERSION=(?<currentValue>[^\\s\\\\]+)"],
+      "depNameTemplate": "wyoming",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "customType": "regex",
+      "description": "funasr in the Dockerfile",
+      "managerFilePatterns": ["/^whisper/Dockerfile$/"],
+      "matchStrings": ["\\bFUNASR_VERSION=(?<currentValue>[^\\s\\\\]+)"],
+      "depNameTemplate": "funasr",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "customType": "regex",
+      "description": "onnxruntime in the Dockerfile",
+      "managerFilePatterns": ["/^whisper/Dockerfile$/"],
+      "matchStrings": ["\\bONNXRUNTIME_VERSION=(?<currentValue>[^\\s\\\\]+)"],
+      "depNameTemplate": "onnxruntime",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "customType": "regex",
+      "description": "faster-whisper in the Dockerfile",
+      "managerFilePatterns": ["/^whisper/Dockerfile$/"],
+      "matchStrings": [
+        "\\bFASTER_WHISPER_VERSION=(?<currentValue>[^\\s\\\\]+)"
+      ],
+      "depNameTemplate": "faster-whisper",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "customType": "regex",
+      "description": "ctranslate2 in the Dockerfile",
+      "managerFilePatterns": ["/^whisper/Dockerfile$/"],
+      "matchStrings": ["\\bCTRANSLATE2_VERSION=(?<currentValue>[^\\s\\\\]+)"],
+      "depNameTemplate": "ctranslate2",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "customType": "regex",
+      "description": "sherpa-onnx in the Dockerfile",
+      "managerFilePatterns": ["/^whisper/Dockerfile$/"],
+      "matchStrings": ["\\bSHERPA_ONNX_VERSION=(?<currentValue>[^\\s\\\\]+)"],
+      "depNameTemplate": "sherpa-onnx",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "customType": "regex",
+      "description": "torch in the Dockerfile",
+      "managerFilePatterns": ["/^whisper/Dockerfile$/"],
+      "matchStrings": ["\\bTORCH_VERSION=(?<currentValue>[^\\s\\\\]+)"],
+      "depNameTemplate": "torch",
+      "datasourceTemplate": "pypi"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/home-assistant/base-debian"],
+      "versionCompatibility": "^trixie-(?<version>\\d+\\.\\d+\\.\\d+)$",
+      "versioning": "pep440",
+      "sourceUrl": "https://github.com/home-assistant/docker-base",
+      "groupName": "docker-base",
+      "commitMessageTopic": "home-assistant/base-debian image",
+      "commitMessageExtra": "to {{newValue}}"
+    },
+    {
+      "description": "Dockerfile ARGs pin image components, so title their PRs \"Update <name> to <version>\"",
+      "matchManagers": ["custom.regex"],
+      "commitMessageTopic": "{{depName}}"
+    },
+    {
+      "description": "GitHub Actions: weekly with a 7 day cooldown, like Dependabot did",
+      "matchManagers": ["github-actions"],
+      "addLabels": ["github_actions"],
+      "schedule": ["before 8am on monday"],
+      "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "Leave runner labels and action version inputs alone, Dependabot never updated those",
+      "matchManagers": ["github-actions"],
+      "matchDepTypes": ["github-runner", "uses-with"],
+      "enabled": false
+    },
+    {
+      "description": "Our own actions that follow a branch (like home-assistant/actions@master) float on purpose. Pinning them would open a digest PR in every repository for each change to them. Our own actions on a version tag are pinned like any other.",
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["home-assistant/**"],
+      "matchCurrentValue": "/^(dev|main|master)$/",
+      "pinDigests": false
+    }
+  ]
+}
