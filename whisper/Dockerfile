@@ -5,7 +5,7 @@ FROM ${BUILD_FROM}
 # Install Whisper
 WORKDIR /usr/src
 ARG \
-    WYOMING_WHISPER_VERSION=3.5.0 \
+    WYOMING_WHISPER_VERSION=3.8.1 \
     WYOMING_VERSION=1.11.0
 # Must match the exact pins of wyoming-faster-whisper
 ARG \
