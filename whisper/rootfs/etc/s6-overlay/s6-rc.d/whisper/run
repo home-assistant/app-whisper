@@ -6,8 +6,23 @@
 # ==============================================================================
 flags=()
 
-if [ "$(uname -m)" == "x86_64" ] && ! grep -qw 'avx' /proc/cpuinfo; then
-    bashio::log.warning "Your CPU does not support Advanced Vector Extensions (AVX). Whisper will run slower than normal."
+if [ "$(uname -m)" == "x86_64" ]; then
+    # NumPy's wheels require x86-64-v2, and importing it fails with an obscure
+    # error on a CPU without it. These are the flags NumPy checks for its
+    # X86_V2 baseline. Virtual machines often hide them (e.g. Proxmox "kvm64").
+    missing_flags=()
+    for cpu_flag in sse sse2 pni ssse3 sse4_1 sse4_2 popcnt cx16 lahf_lm; do
+        if ! grep -qw "${cpu_flag}" /proc/cpuinfo; then
+            missing_flags+=("${cpu_flag}")
+        fi
+    done
+    if [ "${#missing_flags[@]}" -gt 0 ]; then
+        bashio::exit.nok "Your CPU does not support x86-64-v2, which Whisper requires (missing: ${missing_flags[*]}). If Home Assistant runs in a virtual machine, change its CPU type to 'host' (in Proxmox: Hardware > Processors > Type)."
+    fi
+
+    if ! grep -qw 'avx' /proc/cpuinfo; then
+        bashio::log.warning "Your CPU does not support Advanced Vector Extensions (AVX). Whisper will run slower than normal."
+    fi
 fi
 
 model="$(bashio::config 'model')"
