@@ -1,0 +1,85 @@
+---
+configuration:
+  beam_size:
+    name: Širina pretrage
+    description: >-
+      Broj kandidata koji se istovremeno razmatraju tokom transkripcije (0 =
+      automatski). Povećanje ove vrednosti povećava tačnost na račun
+      performansi.
+  language:
+    name: Jezik
+    description: >-
+      Jezik za koji se model unapred učitava prilikom pokretanja.
+  model:
+    name: Model
+    description: |
+      Whisper model koji će se koristiti za transkripciju.
+
+      Podrazumevana opcija `auto` bira `tiny-int8` za ARM uređaje kao što je Raspberry
+      Pi 4, odnosno `base-int8` za ostale uređaje. Komprimovani modeli (`int8`) su nešto
+      manje precizni od standardnih verzija, ali su manji i brži.
+  custom_model:
+    name: Prilagođeni model
+    description: |
+      Putanja do direktorijuma sa konvertovanim modelom ili ID Whisper modela
+      konvertovanog za CTranslate2 sa HuggingFace Hub-a, kao što je
+      "Systran/faster-distil-whisper-small.en".
+
+      Ako je `custom_model_type` podešen na 'transformers', može se koristiti
+      ID HuggingFace transformers Whisper modela sa HuggingFace-a, kao što je
+      'openai/whisper-tiny.en'.
+  custom_model_type:
+    name: Tip prilagođenog modela
+    description: |
+      Pozadinski sistem za pretvaranje govora u tekst (STT) koji se koristi za `custom_model` ako je `stt_library` podešen
+      na automatski (`auto`).
+  initial_prompt:
+    name: Početni upit
+    description: >-
+      Opis zvuka koji može pomoći modelu Whisper da bolje transkribuje
+      neuobičajene reči.
+  stt_library:
+    name: Biblioteka za govor u tekst
+    description: >-
+      Pozadinska biblioteka za pretvaranje govora u tekst koja će se koristiti.
+
+      Podrazumevana opcija `auto` bira najbolju biblioteku/model na osnovu
+      jezika i hardvera.
+
+      Zamenjuje se opcijom `custom_model_type` kada je `custom_model` podešen.
+  whisper_task:
+    name: Zadatak modela Whisper
+    description: >-
+      Zadatak koji model treba da izvrši.
+
+      Podrazumevana opcija `transcribe` zapisuje zvuk na jeziku na kojem se govori, dok
+      `translate` prevodi izgovoreni zvuk na engleski jezik.
+  sherpa_streaming:
+    name: Sherpa striming
+    description: >-
+      Koristi striming model sa sherpa pozadinskim sistemom.
+
+      Ovo zamenjuje podrazumevani engleski model bržim, ali manje preciznim
+      striming modelom.
+  vad_clip:
+    name: VAD isecanje tišine
+    description: >-
+      Koristi detekciju glasovne aktivnosti (VAD) za isecanje tišine iz zvuka pre
+      transkripcije.
+
+      Ovo značajno smanjuje kašnjenje kod snimaka sa mnogo tišine, posebno kod paketnih
+      sistema kao što su sherpa i funasr. Ne utiče na striming sisteme.
+  local_files_only:
+    name: Samo lokalne datoteke
+    description: >-
+      Koristi samo modele koji su već preuzeti i nikada ne proverava ažuriranja
+      na mreži.
+
+      Ostavite ovu opciju isključenu dok se modeli ne preuzmu, a zatim je uključite kako bi
+      dodatak ostao van mreže i preskakao proveru ažuriranja pri svakom zahtevu.
+  debug_logging:
+    name: Evidencija za otklanjanje grešaka
+    description: >-
+      Upisuje poruke DEBUG nivoa u evidenciju aplikacije.
+network:
+  10300/tcp: Whisper Wyoming protokol
